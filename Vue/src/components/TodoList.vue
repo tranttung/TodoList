@@ -1,5 +1,6 @@
 <template>
   <div >
+      <!--phut thu 33-->
       <input
        type="text"
         class="todo-input" 
@@ -20,7 +21,9 @@
               class="todo-item-edit"
                v-model="todo.title"
                @blur="doneEdit(todo)"
-               @keyup.enter="doneEdit(todo)">
+               @keyup.enter="doneEdit(todo)"
+               @keyup.esc="cancelEdit(todo)"
+               v-focus>
             </div>
            <div class="remove-item"
             @click="removeTodo(index)">
@@ -40,6 +43,7 @@ export default {
     return {
       newTodo: '',
       idForTodo: 3,
+      beforeEditCache: '',
       todos: [
           {
               'id': 1,
@@ -57,6 +61,13 @@ export default {
       ]
     }
   },
+  directives: {
+      focus:{
+          inserted: function(el){
+              el.focus()
+          }
+      }
+  },
   methods: {
       addTodo(){
           if(this.newTodo.trim().length == 0){
@@ -71,10 +82,17 @@ export default {
           this.idForTodo++
       },
       editTodo(todo){
-          
+          this.beforeEditCache = todo.title
           todo.editing=true
       },
+      cancelEddit(todo){
+          todo.title= this.beforeEditCache
+          todo.editing= false
+      },
       doneEdit(todo){
+            if(todo.title.trim().length == 0){
+
+          }
           todo.editing= false
       },
       removeTodo(index){
